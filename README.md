@@ -82,7 +82,8 @@ If you prefer to run the system natively without Docker, follow these steps:
    ```bash
    npm install
    ```
-4. Start the React development server:
+4. (Optional) If your API is running on a different URL/port, create a `.env` file by copying `.env.example` and updating `VITE_API_BASE_URL`.
+5. Start the React development server:
    ```bash
    npm run dev
    ```

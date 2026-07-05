@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchWithAuth } from '../api';
+import { fetchWithAuth, API_BASE_URL } from '../api';
 
 interface Worker {
   id: string;
@@ -13,7 +13,7 @@ export default function Workers() {
 
   useEffect(() => {
     const fetchWorkers = () => {
-      fetchWithAuth('http://localhost:8000/api/v1/workers/')
+      fetchWithAuth(`${API_BASE_URL}/api/v1/workers/`)
         .then(res => res.json())
         .then(data => setWorkers(data))
         .catch(console.error);

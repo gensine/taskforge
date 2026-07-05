@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchWithAuth } from '../api';
+import { fetchWithAuth, API_BASE_URL } from '../api';
 
 interface Metrics {
   active_workers: number;
@@ -20,8 +20,8 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const [metricsRes, jobsRes] = await Promise.all([
-        fetchWithAuth('http://localhost:8000/api/v1/metrics/system-health'),
-        fetchWithAuth('http://localhost:8000/api/v1/metrics/recent-jobs')
+        fetchWithAuth(`${API_BASE_URL}/api/v1/metrics/system-health`),
+        fetchWithAuth(`${API_BASE_URL}/api/v1/metrics/recent-jobs`)
       ]);
       if (metricsRes.ok) setMetrics(await metricsRes.json());
       if (jobsRes.ok) setJobs(await jobsRes.json());

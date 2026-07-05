@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchWithAuth } from '../api';
+import { fetchWithAuth, API_BASE_URL } from '../api';
 
 interface Queue {
   id: string;
@@ -14,9 +14,9 @@ export default function Queues() {
 
   const togglePause = async (queueId: string, isPaused: boolean) => {
     const action = isPaused ? 'resume' : 'pause';
-    await fetchWithAuth(`http://localhost:8000/api/v1/metrics/queues/${queueId}/${action}`, { method: 'PATCH' });
+    await fetchWithAuth(`${API_BASE_URL}/api/v1/metrics/queues/${queueId}/${action}`, { method: 'PATCH' });
     // force refresh instantly
-    fetchWithAuth('http://localhost:8000/api/v1/metrics/queues')
+    fetchWithAuth(`${API_BASE_URL}/api/v1/metrics/queues`)
       .then(res => res.json())
       .then(data => setQueues(data))
       .catch(console.error);
@@ -24,9 +24,9 @@ export default function Queues() {
 
   const deleteQueue = async (queueId: string) => {
     if (!confirm('Are you sure you want to delete this queue?')) return;
-    await fetchWithAuth(`http://localhost:8000/api/v1/metrics/queues/${queueId}`, { method: 'DELETE' });
+    await fetchWithAuth(`${API_BASE_URL}/api/v1/metrics/queues/${queueId}`, { method: 'DELETE' });
     // force refresh instantly
-    fetchWithAuth('http://localhost:8000/api/v1/metrics/queues')
+    fetchWithAuth(`${API_BASE_URL}/api/v1/metrics/queues`)
       .then(res => res.json())
       .then(data => setQueues(data))
       .catch(console.error);
@@ -34,7 +34,7 @@ export default function Queues() {
 
   useEffect(() => {
     const fetchQueues = () => {
-      fetchWithAuth('http://localhost:8000/api/v1/metrics/queues')
+      fetchWithAuth(`${API_BASE_URL}/api/v1/metrics/queues`)
         .then(res => res.json())
         .then(data => setQueues(data))
         .catch(console.error);
