@@ -42,8 +42,14 @@ import json
 async def process_job(job):
     logger.info(f"Processing job {job.id} of type {job.type}")
     try:
+        async with engine.begin() as conn:
+            await conn.execute(
+                text("UPDATE jobs SET status='processing' WHERE id=:id"),
+                {"id": job.id}
+            )
+            
         # simulate work, replace with real handler logic
-        await asyncio.sleep(1)
+        await asyncio.sleep(60)
         if job.payload and job.payload.get("fail"):
             raise Exception("Simulated failure from payload")
             
