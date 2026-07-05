@@ -39,7 +39,7 @@ Endpoints utilized by the React Dashboard for real-time monitoring.
 - **`GET /api/v1/workers/`**: List all active background workers and their last heartbeat timestamp.
 
 ### 5. Admin & Dashboard Operations
-These unauthenticated endpoints are used directly by the React dashboard for quick administrative control.
+These endpoints are used directly by the React dashboard for administrative control and observability. **They require JWT Authentication.**
 - **`GET /api/v1/metrics/queues`**: List all queues with their active/paused status.
 - **`PATCH /api/v1/metrics/queues/{queue_id}/pause`**: Instantly pause a queue, instructing workers to skip its jobs.
 - **`PATCH /api/v1/metrics/queues/{queue_id}/resume`**: Resume a paused queue.

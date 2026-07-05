@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { fetchWithAuth } from '../api';
 
 interface Metrics {
   active_workers: number;
@@ -18,9 +19,11 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const metricsRes = await fetch('http://localhost:8000/api/v1/metrics/system-health');
+      const [metricsRes, jobsRes] = await Promise.all([
+        fetchWithAuth('http://localhost:8000/api/v1/metrics/system-health'),
+        fetchWithAuth('http://localhost:8000/api/v1/metrics/recent-jobs')
+      ]);
       if (metricsRes.ok) setMetrics(await metricsRes.json());
-      const jobsRes = await fetch('http://localhost:8000/api/v1/metrics/recent-jobs');
       if (jobsRes.ok) setJobs(await jobsRes.json());
     } catch (e) {
       console.error('Fetch error:', e);

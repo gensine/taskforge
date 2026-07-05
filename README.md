@@ -89,6 +89,8 @@ If you prefer to run the system natively without Docker, follow these steps:
 
 The dashboard will now be accessible at `http://localhost:5173`.
 
+> **Default Dashboard Credentials:** If you ran `seed.py`, log in with email: `admin@test.com` and password: `password`.
+
 ## Running Automated Tests
 
 I have included a suite of automated end-to-end integration tests using `pytest` and `httpx` to verify the core APIs and atomic job processing logic.

@@ -20,3 +20,7 @@
 ## 5. Idempotency
 - **Decision**: Jobs support an `idempotency_key`.
 - **Trade-off**: Distributed systems guarantee "at-least-once" delivery. If a worker crashes right after finishing a job but before updating the database, another worker might pick it up. Relying on an idempotency key ensures that the actual *execution* logic won't process the same data twice. This shifts some responsibility to the job payload itself but ensures system safety against network partitions.
+
+## 6. Security & Authentication
+- **Decision**: All API endpoints and dashboard metrics are secured using stateless JSON Web Tokens (JWTs).
+- **Trade-off**: Using JWTs over stateful session cookies ensures the FastAPI backend remains entirely stateless. This means we can deploy the API behind a load balancer without worrying about sticky sessions. The trade-off is the inability to forcefully instantly revoke a token before its natural expiration, which we accept for this specific administrative use case.
