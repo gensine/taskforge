@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchWithAuth, API_BASE_URL } from '../api';
 
 interface Worker {
