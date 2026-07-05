@@ -13,3 +13,4 @@ croniter
 pytest
 pytest-asyncio
 httpx
+email-validator
