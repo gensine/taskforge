@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import signal
 import uuid
 from datetime import datetime
@@ -184,9 +186,31 @@ async def cron_loop():
             logger.error(f"Cron loop failed: {e}")
         await asyncio.sleep(60)
 
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/health':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(b"OK")
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def log_message(self, format, *args):
+        pass
+
+def run_health_server():
+    server = HTTPServer(('0.0.0.0', 8001), HealthCheckHandler)
+    server.serve_forever()
+
 async def main():
     logger.info(f"Worker {WORKER_ID} starting")
     
+    health_thread = threading.Thread(target=run_health_server, daemon=True)
+    health_thread.start()
+    logger.info("Health check server running on 0.0.0.0:8001")
+
     loop = asyncio.get_running_loop()
     # Windows doesn't support add_signal_handler for all signals, so we handle it gracefully where possible
     try:
