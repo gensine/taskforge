@@ -17,7 +17,6 @@ DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:password
 engine = create_async_engine(DATABASE_URL, connect_args={"ssl": True})
 
 WORKER_ID = str(uuid.uuid4())
-QUEUE_ID = os.getenv("QUEUE_ID", None) # In a real scenario, worker might poll multiple queues
 
 shutdown_event = asyncio.Event()
 
@@ -107,17 +106,11 @@ async def process_job(job):
                 logger.info(f"Job {job.id} scheduled for retry {new_attempt}")
 
 async def polling_loop():
-    if not QUEUE_ID:
-        logger.warning("QUEUE_ID not set, polling will skip unless updated.")
-        
+    logger.info("Worker started dynamic polling across all active queues.")
     while not shutdown_event.is_set():
-        if not QUEUE_ID:
-            await asyncio.sleep(5)
-            continue
-            
         try:
             async with engine.begin() as conn:
-                # Atomic claim
+                # Atomic claim globally across all active queues
                 result = await conn.execute(
                     text("""
                         UPDATE jobs 
@@ -126,8 +119,7 @@ async def polling_loop():
                             claimed_at=NOW() 
                         WHERE id IN (
                             SELECT id FROM jobs 
-                            WHERE queue_id = :queue_id 
-                              AND status = 'queued' 
+                            WHERE status = 'queued' 
                               AND run_at <= NOW() 
                               AND EXISTS (SELECT 1 FROM queues WHERE queues.id = jobs.queue_id AND queues.is_paused = FALSE)
                             ORDER BY priority DESC, run_at ASC 
@@ -136,7 +128,7 @@ async def polling_loop():
                         ) 
                         RETURNING *
                     """),
-                    {"worker_id": WORKER_ID, "queue_id": QUEUE_ID}
+                    {"worker_id": WORKER_ID}
                 )
                 jobs = result.mappings().all()
                 
