@@ -16,6 +16,7 @@ interface Job {
 export default function Dashboard() {
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const fetchData = async () => {
     try {
@@ -74,6 +75,16 @@ export default function Dashboard() {
       <section>
         <div className="flex justify-between items-end mb-4">
           <h2 className="text-2xl font-medium text-white">Recent Jobs</h2>
+          <select 
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-zinc-800 border border-zinc-700 text-sm text-zinc-300 rounded-lg px-3 py-1.5 outline-none focus:border-violet-500 hover:bg-zinc-700 transition-colors cursor-pointer"
+          >
+            <option value="all">All Statuses</option>
+            <option value="queued">Queued</option>
+            <option value="processing">Processing</option>
+            <option value="completed">Completed</option>
+          </select>
         </div>
         <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden">
           <table className="w-full text-left text-sm">
@@ -86,7 +97,9 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800">
-              {jobs.map((job) => (
+              {jobs
+                .filter(job => statusFilter === 'all' || job.status.toLowerCase() === statusFilter)
+                .map((job) => (
                 <tr key={job.id} className="hover:bg-zinc-800/20 transition-colors">
                   <td className="px-6 py-4 font-mono text-xs text-zinc-500">{job.id.substring(0, 8)}...</td>
                   <td className="px-6 py-4">{job.type}</td>
