@@ -28,8 +28,8 @@ This project is fully containerized. You do not need to install Python or Node l
 1. Ensure you have [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running.
 2. Clone this repository:
    ```bash
-   git clone <your-repo-url>
-   cd Distributed-Job-Scheduler
+   git clone https://github.com/gensine/taskforge.git
+   cd taskforge
    ```
 3. Spin up the entire infrastructure (Database, Cache, API, Background Worker, and Frontend UI):
    ```bash
