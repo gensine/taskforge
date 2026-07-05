@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:password@localhost/job_scheduler")
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(DATABASE_URL, connect_args={"ssl": True})
 
 WORKER_ID = str(uuid.uuid4())
 QUEUE_ID = os.getenv("QUEUE_ID", None) # In a real scenario, worker might poll multiple queues
