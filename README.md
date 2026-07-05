@@ -41,6 +41,54 @@ Once the containers are running, the following services will be available:
 - **API Documentation (Swagger):** [http://localhost:8000/docs](http://localhost:8000/docs)
 - **Backend API Base URL:** `http://localhost:8000`
 
+## Local Development Setup (Native)
+
+If you prefer to run the system natively without Docker, follow these steps:
+
+### 1. Database Setup
+1. Install and start [PostgreSQL](https://www.postgresql.org/download/).
+2. Create a new database for the project (e.g., `job_scheduler`).
+
+### 2. Backend & Worker Setup
+1. Ensure you have Python 3.11+ installed.
+2. Open a terminal in the root directory and create a virtual environment:
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate  # On Windows
+   # source venv/bin/activate  # On Mac/Linux
+   ```
+3. Install the dependencies for both the API and the Worker:
+   ```bash
+   pip install -r api/requirements.txt
+   pip install -r worker/requirements.txt
+   ```
+4. Set your `DATABASE_URL` environment variable if your database credentials differ from the default (`postgresql+asyncpg://postgres:password@localhost/job_scheduler`).
+5. Start the FastAPI backend server:
+   ```bash
+   uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+   ```
+6. Open a new terminal, activate the virtual environment, and start a background worker:
+   ```bash
+   python worker/main.py
+   ```
+
+### 3. Frontend Dashboard Setup
+1. Ensure you have [Node.js](https://nodejs.org/) installed.
+2. Open a new terminal in the `frontend` directory:
+   ```bash
+   cd frontend
+   ```
+3. Install the frontend dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the React development server:
+   ```bash
+   npm run dev
+   ```
+
+The dashboard will now be accessible at `http://localhost:5173`.
+
 ## Running Automated Tests
 
 I have included a suite of automated end-to-end integration tests using `pytest` and `httpx` to verify the core APIs and atomic job processing logic.

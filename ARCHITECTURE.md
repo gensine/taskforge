@@ -4,8 +4,8 @@
 
 ```mermaid
 graph TD
-    Client([API Clients]) -->|Auth & Job Submission| API[FastAPI Backend]
-    Dashboard([React Dashboard]) -->|Admin & Metrics (HTTP)| API
+    Client([API Clients]) -->|Auth and Job Submission| API[FastAPI Backend]
+    Dashboard([React Dashboard]) -->|Admin and Metrics HTTP| API
     API -->|Read / Write| DB[(PostgreSQL)]
     API -->|Metrics Caching| Cache[(Redis)]
     
