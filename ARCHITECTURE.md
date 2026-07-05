@@ -6,11 +6,11 @@
 graph TD
     Client([API Clients]) -->|Auth and Job Submission| API[FastAPI Backend]
     Dashboard([React Dashboard]) -->|Admin and Metrics HTTP| API
-    API -->|Read / Write| DB[(PostgreSQL)]
+    API -->|Read Write| DB[(PostgreSQL)]
     API -->|Metrics Caching| Cache[(Redis)]
     
-    Worker1[Worker Service 1] -->|Poll (Atomic Claim)| DB
-    Worker2[Worker Service N] -->|Poll (Atomic Claim)| DB
+    Worker1[Worker Service 1] -->|Poll Atomic Claim| DB
+    Worker2[Worker Service N] -->|Poll Atomic Claim| DB
     
     Worker1 -->|Update Heartbeats| DB
     Worker2 -->|Update Heartbeats| DB
